@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import routes from './router/index'
 import './App.less';
+import './assets/root.css';
 
 
 class App extends Component {
