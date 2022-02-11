@@ -15,7 +15,7 @@ class App extends Component {
       collapsed: false,
       data: 'hello',
       person: '',
-      userName: 'testuser' || ''
+      userName: 'T-admin' || ''
     }
   }
   toggle = () => {
