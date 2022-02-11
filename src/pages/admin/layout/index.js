@@ -26,7 +26,7 @@ class App extends Component {
   componentDidMount () {
     document.title = 'qxzx-admin'
   }
-  handleClickMenuItem (item) {
+  handleClickMenuItem (item) { //设置侧边菜单栏初始选项与记录
     sessionStorage.setItem('menuItmeKey', String(item.key))
   }
   handleClickDrop () {
@@ -89,7 +89,7 @@ class App extends Component {
                 </Content>
               </div>
               <Footer style={{ textAlign: 'center' }}>
-                Created by Gong
+                Created by Go
               </Footer>
             </Layout>
           </Layout>

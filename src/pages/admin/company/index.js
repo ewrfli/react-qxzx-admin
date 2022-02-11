@@ -1,6 +1,6 @@
 import React from 'react'
 
-class User extends React.Component {
+class Company extends React.Component {
   constructor (props) {
     super(props)
     this.state = {}
@@ -14,9 +14,9 @@ class User extends React.Component {
   render() {
     return (
       <div>
-        <h3>welcome User</h3>
+        <h3>welcome Company</h3>
       </div>
     )
   }
 }
-export default User
+export default Company

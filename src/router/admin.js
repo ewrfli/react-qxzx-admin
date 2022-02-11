@@ -4,6 +4,7 @@ const Tags = loadable(()=>import('../pages/admin/tags'))
 const Star = loadable(()=>import('../pages/admin/star'))
 const Home = loadable(()=>import('../pages/admin/home'))
 const Category = loadable(()=>import('../pages/admin/category'))
+const Company = loadable(()=>import('../pages/admin/company'))
 const Users = loadable(()=>import('../pages/admin/users'))
 const Article = loadable(()=>import('../pages/admin/article'))
 const ArticleItem = loadable(()=>import('../pages/admin/article/item'))
@@ -43,6 +44,13 @@ const routes = [
     title: '分类',
     path: '/admin/category',
     component: Category
+  },
+  {
+    menu: true,
+    icon: 'tags',
+    title: '公司',
+    path: '/admin/company',
+    component: Company
   },
   {
     menu: true,
