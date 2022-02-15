@@ -14,8 +14,10 @@ class User extends React.Component {
       delModalvisible: false, //显示弹弹窗
       addModalvisible: false,
       userItemData: {},
+      userAddData: {},
       tag: '',
       name: '',
+      user_name: '',
       pageNo: 1,
       pageSize: 10,
       total: null,
@@ -66,12 +68,14 @@ class User extends React.Component {
 
   // 初始化
   componentDidMount() {
+    this.props.form.validateFields();
     this.getList()
   }
   // 请求数据
   async getList () {
     this.setState({loading: true})
     const params = {
+      user_name: this.state.user_name,
       pageNo: this.state.pageNo,
       pageSize: this.state.pageSize
     }
@@ -86,30 +90,21 @@ class User extends React.Component {
       })
   }
 
-  // 新增
-  // async handleOk () {
-  //   const {code, data} = await api.post('tag/create', {name: this.state.tag})
-  //   this.setState({
-  //     visible: false,
-  //     tag: ''
-  //   })
-  //   if (code === 1000) message.success('新增成功！')
-  //   else message.error(data)
-  //   this.getList()
-  // }
-    //新增弹窗显示
-    // async addClick(record) {
-    //   await this.setState( {userItemData: record, delModalvisible: true} )
-    //   console.log(record,this.state.userItemData)
-    // }
+  // 新增用户
     //取消新增弹窗显示
     handleAddCancel() {
-      this.setState( {userItemData: {}, addModalvisible: false} )
+      console.log('取消新增弹窗显示')
+      this.setState( {userAddData: {}, addModalvisible: false} )
     }
-    //新增弹窗确认删除
+    //新增弹窗确认
     async handleAddOk() {
-      console.log(this.state.userItemData)
-      this.setState( {userItemData: {}, addModalvisible: false} )
+      console.log('新增弹窗确认')
+      const {code, data} = await api.post('user/add', {user_name: this.state.user_name, user_phone: Math.random()*100})
+      this.setState( {userAddData: {}, user_name:'', addModalvisible: false} )
+      if (code) message.success('新增成功！' + code)
+      else message.error(data)
+      this.getList()
+
     }
 
   //删除
@@ -146,14 +141,14 @@ class User extends React.Component {
       if (!err) {
         await this.setState({
           pageNo: 1,
-          name: values.name || ''
+          user_name: values.user_name || ''
         })
         this.getList()
       }
     });
   }
   handdleChange (e) {
-    this.setState({tag: e.target.value})
+    this.setState({user_name: e.target.value})
   }
   // 更改page
   async handleOnChange (page) {
@@ -165,6 +160,7 @@ class User extends React.Component {
   }
   render() {
     const { userItemData } = this.state;
+    const { getFieldDecorator } = this.props.form
     return (
       <div>
         {/* 确认删除弹窗 */}
@@ -180,12 +176,15 @@ class User extends React.Component {
           visible={ this.state.addModalvisible }
           onOk={this.handleAddOk.bind(this)}
           onCancel={ this.handleAddCancel.bind(this) }>
-            <p>添加</p>
+            <Input placeholder="请输入用户名" value={ this.state.user_name } onChange={ e => this.handdleChange(e) } />
+
         </Modal>
         {/* 头部 */}
         <Form layout="inline" onSubmit={this.handleSubmit}>
           <Form.Item>
-            <Input placeholder="请输入" allowClear={true} />
+          {getFieldDecorator('user_name')(
+            <Input placeholder="请输入用户名" allowClear={true} />
+          )}
           </Form.Item>
           <Form.Item>
             <Button className='mr10' type="primary" htmlType="submit">search</Button>
@@ -215,5 +214,6 @@ class User extends React.Component {
     )
   }
 }
+const article = Form.create({ name: 'horizontal_login' })(User)
 
-export default User
+export default article
