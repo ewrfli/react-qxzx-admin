@@ -1,8 +1,7 @@
 import React from 'react'
-import { color } from '../../../utils'
-import { Table, Form, Button, message, Modal, Tag } from 'antd';
+import { color, deBounce } from '../../../utils'
+import { Table, Form, Button, Input, message, Modal, Tag } from 'antd';
 import api from '../../../api'
-const { confirm } = Modal;
 
 // function hasErrors(fieldsError) {
 //   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -12,9 +11,38 @@ class User extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      delModalvisible: false,
-      tag: '',
-      name: '',
+      delModalvisible: false, //显示弹弹窗
+      addModalvisible: false,
+      userItemData: {},
+      userAddData: {
+        user_name: '',//
+        user_password: '',
+        user_avatarimg: '',
+        user_desc: '',
+        user_power: '',
+        user_powerDate: '',
+        user_phone: '',
+        user_email: '',
+        user_birthday: '',
+        user_age: '',
+        user_ip: '',
+        user_company_id: '',
+        user_company_name: ''
+      },
+      user_name: '',//
+      user_password: '',
+      user_avatarimg: '',
+      user_desc: '',
+      user_power: '',
+      user_powerDate: '',
+      user_phone: '',
+      user_email: '',
+      user_birthday: '',
+      user_age: '',
+      user_ip: '',
+      user_company_id: '',
+      user_company_name: '',
+      search_user_name: '',//
       pageNo: 1,
       pageSize: 10,
       total: null,
@@ -30,6 +58,7 @@ class User extends React.Component {
         {
           title: '用户名',
           width: 100,
+          key: 'user_name',
           dataIndex: 'user_name',
           render: name => (
             <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
@@ -37,17 +66,18 @@ class User extends React.Component {
         },
         {
           title: '手机',
+          key: 'user_phone',
           dataIndex: 'user_phone',
           width: 150,
           align: 'center'
         },
         {
           title: '创建时间',
+          key: 'createdAt',
           dataIndex: 'createdAt'
         },
         {
           title: '操作',
-          key: 'action',
           width: 150,
           align: 'center',
           render: record => (
@@ -60,20 +90,17 @@ class User extends React.Component {
       ]
     }
   }
-  async editClick (record) {
-    console.log('update',record)
-    await api.post('user/update', record)
-    message.success('编辑成功')
-    this.getList()
-  }
+
+  // 初始化
   componentDidMount() {
-    // To disabled submit button at the beginning.
-    // this.props.form.validateFields();
+    this.props.form.validateFields();
     this.getList()
   }
+  // 请求数据
   async getList () {
     this.setState({loading: true})
     const params = {
+      user_name: this.state.search_user_name,
       pageNo: this.state.pageNo,
       pageSize: this.state.pageSize
     }
@@ -87,63 +114,79 @@ class User extends React.Component {
       loading: false
       })
   }
-  // 查询
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields( async(err, values) => {
-      if (!err) {
-        await this.setState({
-          pageNo: 1,
-          name: values.name || ''
-        })
-        this.getList()
-      }
-    });
-  }
-  handdleChange (e) {
-    this.setState({tag: e.target.value})
-  }
 
-  // 新增
-  async handleOk () {
-    const {code, data} = await api.post('tag/create', {name: this.state.tag})
-    this.setState({
-      visible: false,
-      tag: ''
-    })
-    if (code === 1000) message.success('新增成功！')
-    else message.error(data)
+  // 新增用户
+    //取消新增弹窗显示
+    handleAddCancel() {
+      console.log('取消新增弹窗显示')
+      this.setState( {userAddData: {}, addModalvisible: false} )
+    }
+    //新增弹窗确认
+    async handleAddOk(e) {
+      e.preventDefault()
+      console.log('新增弹窗确认',e)
+      this.props.form.validateFields(async (err, values) => {
+        if (!err) { // 这里是通过校验的执行,未通过的则会在对应表单进行提示
+          console.log('values',values)
+          let params = { ...values }
+          const {code, data} = await api.post('user/add', params)
+          if (code) message.success('新增成功！' + code)
+          else message.error(data)
+          this.getList()
+          this.setState( {addModalvisible: false} )
+          //重置表单
+          this.props.form.resetFields()
+        } 
+      })
+    }
+
+
+  //编辑
+  async editClick (record) {
+    console.log('update',record)
+    message.success('编辑成功')
     this.getList()
   }
 
-  //确认删除弹窗
-  // handleDelOk(record) {
-  //   await api.post('user/del', {user_id: record.user_id})
-  //   message.success('删除成功')
-  //   this.getList()
-  //   this.setState({delModalvisible: false})
-  // }
-  // handleDelCancel () {
-  //   this.setState({delModalvisible: false})
-  // }
 
+  //删除
+  //删除弹窗显示
   async delClick(record) {
-    confirm({
-      title: '确认要删除?',
-      content: `用户：${record.user_name}`,
-      async onOk() {
-        console.log('OK',record);
-        await api.post('user/del', {user_id: record.user_id})
-        await this.getList()
-        message.success('删除成功')
-        Modal.destroyAll();
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
+    await this.setState( {userItemData: record, delModalvisible: true} )
+    console.log(record,this.state.userItemData)
   }
-  // page
+  //取消删除弹窗显示
+  handleDelCancel() {
+    this.setState( {userItemData: {}, delModalvisible: false} )
+  }
+  //删除弹窗确认删除
+  async handleDelOk() {
+    console.log(this.state.userItemData)
+    await api.post('user/del', {user_id: this.state.userItemData.user_id})
+    message.success('删除成功')
+    this.getList()
+    this.setState( {userItemData: {}, delModalvisible: false} )
+  }
+
+
+
+  // 查询
+  async handdleSearchChange (e) {
+    // console.log('e.target.value',e.target.value)
+    // this.setState({search_user_name: e.target.value})
+    await this.setState({
+      pageNo: 1,
+      search_user_name: e.target.value || ''
+    })
+    // this.getList()
+  }
+  async toSearch () {
+    console.log('toSearch')
+    this.getList()
+  }
+
+
+  // 更改page
   async handleOnChange (page) {
     await this.setState({
       pageNo: page.current,
@@ -151,28 +194,75 @@ class User extends React.Component {
     })
     this.getList()
   }
+
   render() {
-    // const { getFieldDecorator } = this.props.form
+    const { userItemData } = this.state;
+    const { getFieldDecorator } = this.props.form
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 8 },
+        sm: { span: 5 },
+        xxl: { span: 2 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+        md: { span: 12 }
+      }
+    }
     return (
       <div>
-        {/* <Modal
+        {/* 确认删除弹窗 */}
+        <Modal
           title="确认删除"
           visible={ this.state.delModalvisible }
           onOk={this.handleDelOk.bind(this)}
           onCancel={ this.handleDelCancel.bind(this) }>
-            <p>是否确认删除？</p>
-        </Modal> */}
-        <Form layout="inline" onSubmit={this.handleSubmit}>
+            <p>确认删除用户：{userItemData ? userItemData.user_name : ''}</p>
+        </Modal>
+        {/* 添加用户弹窗 */}
+        <Modal
+          title="添加/编辑用户"
+          visible={ this.state.addModalvisible }
+          onOk={this.handleAddOk.bind(this)}
+          onCancel={ this.handleAddCancel.bind(this) }>
+           
+            <Form onSubmit={this.handleAddOk} {...formItemLayout}>
+              <Form.Item label='用户名'>
+                {getFieldDecorator('user_name', {
+                  rules: [{ required: true, message: '请输入用户名!' }],
+                })(
+                  <Input placeholder="请输入用户名" allowClear />
+                )}
+              </Form.Item>
+              <Form.Item label='手机号'>
+                {getFieldDecorator('user_phone', {
+                  rules: [{ required: true, message: '请输入手机号!' }],
+                })(
+                  <Input placeholder="请输入手机号" allowClear />
+                )}
+              </Form.Item>
+              <Form.Item label='用户描述'>
+                {getFieldDecorator('user_descccc', {
+                  rules: [{ required: true, message: '请输入用户描述!' }],
+                })(
+                  <Input placeholder="请输入用户描述" allowClear />
+                )}
+              </Form.Item>
+            </Form>
+        </Modal>
+        {/* 头部 */}
+        <Form layout="inline">
           <Form.Item>
-          {/* {getFieldDecorator('name')(
-            <Input placeholder="请输入标签" allowClear={true} />
-          )} */}
+            <Input placeholder="请输入用户名搜索" value={ this.state.search_user_name } onChange={ e => this.handdleSearchChange(e) } onPressEnter={ e => this.toSearch(e)} />
           </Form.Item>
           <Form.Item>
-          <Button className='mr10' type="primary" htmlType="submit">search</Button>
-          <Button type='primary' onClick={ _ => this.setState({delModalvisible: true}) }>create</Button>
+            <Button className='mr10' type="primary" onClick={ e => this.toSearch(e)}>search</Button>
+            <Button type='primary' onClick={ _ => this.setState({addModalvisible: true}) }>create</Button>
         </Form.Item>
       </Form>
+      
+      {/* 表格 */}
       <Table
         bordered
         className='mt10'
@@ -187,13 +277,14 @@ class User extends React.Component {
         loading={ this.state.loading }
         columns={ this.state.columns }
         dataSource={ this.state.data }
-        rowKey={record => record.id}
+        rowKey={record => record.user_id}
         onChange={(page) => this.handleOnChange(page)}
       />
+
       </div>
     )
   }
 }
-// const User = Form.create({ name: 'horizontal_login' })(articleList)
+const article = Form.create({ name: 'horizontal_login' })(User)
 
-export default User
+export default article
