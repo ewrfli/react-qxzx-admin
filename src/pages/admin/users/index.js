@@ -1,5 +1,5 @@
 import React from 'react'
-import { color } from '../../../utils'
+import { color, deBounce } from '../../../utils'
 import { Table, Form, Button, Input, message, Modal, Tag } from 'antd';
 import api from '../../../api'
 
@@ -14,10 +14,22 @@ class User extends React.Component {
       delModalvisible: false, //显示弹弹窗
       addModalvisible: false,
       userItemData: {},
-      userAddData: {},
-      tag: '',
-      name: '',
+
       user_name: '',
+      user_password: '',
+      user_avatarimg: '',
+      user_desc: '',
+      user_power: '',
+      user_powerDate: '',
+      user_phone: '',
+      user_email: '',
+      user_birthday: '',
+      user_age: '',
+      user_ip: '',
+      user_company_id: '',
+      user_company_name: '',
+
+      search_user_name: '',
       pageNo: 1,
       pageSize: 10,
       total: null,
@@ -75,7 +87,7 @@ class User extends React.Component {
   async getList () {
     this.setState({loading: true})
     const params = {
-      user_name: this.state.user_name,
+      user_name: this.state.search_user_name,
       pageNo: this.state.pageNo,
       pageSize: this.state.pageSize
     }
@@ -97,15 +109,31 @@ class User extends React.Component {
       this.setState( {userAddData: {}, addModalvisible: false} )
     }
     //新增弹窗确认
-    async handleAddOk() {
-      console.log('新增弹窗确认')
-      const {code, data} = await api.post('user/add', {user_name: this.state.user_name, user_phone: Math.random()*100})
-      this.setState( {userAddData: {}, user_name:'', addModalvisible: false} )
-      if (code) message.success('新增成功！' + code)
-      else message.error(data)
-      this.getList()
+    async handleAddOk(e) {
+      e.preventDefault()
+      console.log('新增弹窗确认',e)
+      this.props.form.validateFields(async (err, values) => {
+        if (!err) {
+          console.log('values',values)
+          this.setState( {user_name:'', addModalvisible: false} )
+        } 
+      })
+      // const {code, data} = await api.post('user/add', {user_name: this.state.user_name, user_phone: Math.random()*100})
+      // this.setState( {userAddData: {}, user_name:'', addModalvisible: false} )
+      // if (code) message.success('新增成功！' + code)
+      // else message.error(data)
+      // this.getList()
 
     }
+
+    // handleSubmit = (e) => {
+    //   e.preventDefault()
+    //   this.props.form.validateFields(async (err, values) => {
+    //     if (!err) {
+
+    //     } 
+    //   })
+    // }
 
   //删除
   //删除弹窗显示
@@ -135,21 +163,24 @@ class User extends React.Component {
   }
 
   // 查询
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields( async(err, values) => {
-      if (!err) {
-        await this.setState({
-          pageNo: 1,
-          user_name: values.user_name || ''
-        })
-        this.getList()
-      }
-    });
+  
+  async handdleSearchChange (e) {
+    console.log('e.target.value',e.target.value)
+    // this.setState({search_user_name: e.target.value})
+    await this.setState({
+      pageNo: 1,
+      search_user_name: e.target.value || ''
+    })
+    // this.getList()
+    deBounce(this.getList(), 1000);
   }
-  handdleChange (e) {
+
+
+
+  handdleAddChange (e) {
     this.setState({user_name: e.target.value})
   }
+
   // 更改page
   async handleOnChange (page) {
     await this.setState({
@@ -161,6 +192,18 @@ class User extends React.Component {
   render() {
     const { userItemData } = this.state;
     const { getFieldDecorator } = this.props.form
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 8 },
+        sm: { span: 5 },
+        xxl: { span: 2 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+        md: { span: 12 }
+      }
+    }
     return (
       <div>
         {/* 确认删除弹窗 */}
@@ -176,18 +219,32 @@ class User extends React.Component {
           visible={ this.state.addModalvisible }
           onOk={this.handleAddOk.bind(this)}
           onCancel={ this.handleAddCancel.bind(this) }>
-            <Input placeholder="请输入用户名" value={ this.state.user_name } onChange={ e => this.handdleChange(e) } />
-
+            <Input placeholder="请输入用户名" value={ this.state.user_name } onChange={ e => this.handdleAddChange(e) } />
+           
+            <Form onSubmit={this.handleAddOk} {...formItemLayout}>
+              <Form.Item label='用户名'>
+                {getFieldDecorator('user_name', {
+                  rules: [{ required: true, message: '请输入用户名' }],
+                })(
+                  <Input placeholder="请输入用户名" />
+                )}
+              </Form.Item>
+              <Form.Item label='手机号'>
+                {getFieldDecorator('user_phone', {
+                  rules: [{ required: true, message: '请输入手机号' }],
+                })(
+                  <Input placeholder="请输入手机号" />
+                )}
+              </Form.Item>
+            </Form>
         </Modal>
         {/* 头部 */}
-        <Form layout="inline" onSubmit={this.handleSubmit}>
+        <Form layout="inline">
           <Form.Item>
-          {getFieldDecorator('user_name')(
-            <Input placeholder="请输入用户名" allowClear={true} />
-          )}
+            <Input placeholder="请输入用户名搜索" value={ this.state.search_user_name } onChange={ e => this.handdleSearchChange(e) } />
           </Form.Item>
           <Form.Item>
-            <Button className='mr10' type="primary" htmlType="submit">search</Button>
+            {/* <Button className='mr10' type="primary" >search</Button> */}
             <Button type='primary' onClick={ _ => this.setState({addModalvisible: true}) }>create</Button>
         </Form.Item>
       </Form>
