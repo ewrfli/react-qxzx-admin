@@ -1,6 +1,6 @@
 import React from 'react'
-import { color, deBounce } from '../../../utils'
-import { Table, Form, Button, Input, message, Modal, Tag } from 'antd';
+import { color, timetrans } from '../../../utils'
+import { Table, Form, Button, Input, message, Modal, Tag, Upload, Icon, DatePicker } from 'antd';
 import api from '../../../api'
 
 // function hasErrors(fieldsError) {
@@ -10,6 +10,7 @@ class User extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      upImgApi: 'http://127.0.0.1:3002/upload/img',
       loading: false,
       delModalvisible: false, //显示弹弹窗
       addModalvisible: false,
@@ -130,8 +131,10 @@ class User extends React.Component {
   /**
   * 双向绑定 input 修改方法
   */
-  inputDataChange(event, objkey) {
-    let value = event.target.value;
+  inputDataChange(event, objkey, objvalue) {
+    let value = null
+    event ? value = event.target.value : value = objvalue
+    // let value = event.target.value || objvalue;
     let userAddData = this.state.userAddData;
     this.setState({
       userAddData: {
@@ -142,8 +145,25 @@ class User extends React.Component {
     console.log('this.state.userAddData;',this.state.userAddData)
   }
 
+  //上传用户头像
+  upAvatarimg(file) {
+    console.log(file)
+    let imgurl = null;
+    if(file.file.response){
+      imgurl = file.file.response.path
+      this.inputDataChange(null,'user_avatarimg',imgurl)
+    }else{
+      console.log("上传失败")
+    }
 
-
+    console.log('this.state.userAddData;',this.state.userAddData)
+    // const {code, data} = await api.post('upload/img', params)
+  }
+  //日期选择弹窗
+  onDateChange(e){ 
+    let moent = timetrans(e._d)
+    this.inputDataChange(null,'user_birthday',moent)
+  }
   //编辑弹窗显示
   async editClick (record) {
     console.log('update',record)
@@ -196,7 +216,7 @@ class User extends React.Component {
   }
 
   render() {
-    const { userItemData, isEdit } = this.state;
+    const { userItemData, isEdit, upImgApi } = this.state;
     const formItemLayout = {
       labelCol: {
         xs: { span: 8 },
@@ -209,6 +229,12 @@ class User extends React.Component {
         md: { span: 12 }
       }
     }
+    const uploadButton = (
+      <div>
+        <Icon type={this.state.loading ? 'loading' : 'plus'} />
+        <div className="ant-upload-text">Upload</div>
+      </div>
+    );
     return (
       <div>
         {/* 确认删除弹窗 */}
@@ -227,7 +253,19 @@ class User extends React.Component {
           onCancel={ this.handleAddCancel.bind(this) }>
            
             <Form onSubmit={this.handleAddOk} {...formItemLayout}>
-            ·<Form.Item label='用户头像'>
+            · <Form.Item label='用户头像'>
+                <Upload
+                  name="myfile"
+                  listType="picture-card"
+                  className="avatar-uploader"
+                  showUploadList={false}
+                  action={upImgApi}
+                  onChange={e => this.upAvatarimg(e)}
+                >
+                  {this.state.userAddData.user_avatarimg ? <img src={this.state.userAddData.user_avatarimg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                </Upload>
+              </Form.Item>
+              <Form.Item label='头像地址'>
                 <Input placeholder="用户头像" allowClear value={ this.state.userAddData.user_avatarimg } onChange={(e) => this.inputDataChange(e, 'user_avatarimg')}/>
               </Form.Item>
               <Form.Item label='用户名'>
@@ -246,7 +284,7 @@ class User extends React.Component {
                 <Input placeholder="请输入用户描述" allowClear value={ this.state.userAddData.user_desc } onChange={(e) => this.inputDataChange(e, 'user_desc')}/>
               </Form.Item>
               <Form.Item label='生日'>
-                <Input placeholder="YYYY-MM-DD" allowClear value={ this.state.userAddData.user_birthday } onChange={(e) => this.inputDataChange(e, 'user_birthday')}/>
+                <DatePicker onChange={e => this.onDateChange(e)}/>
               </Form.Item>
               <Form.Item label='年龄'>
                 <Input placeholder="年龄" allowClear value={ this.state.userAddData.user_age } onChange={(e) => this.inputDataChange(e, 'user_age')}/>
