@@ -2,7 +2,7 @@ import React from 'react'
 import { color, timetrans } from '../../../utils'
 import { Select, Table, Form, Button, Input, message, Modal, Tag, Upload, Icon, Row, Col} from 'antd';
 import api from '../../../api'
-
+import ReactWEditor from 'wangeditor-for-react';
 const { Option } = Select
 
 // function hasErrors(fieldsError) {
@@ -283,7 +283,7 @@ class Article extends React.Component {
       labelCol: {
         xs: { span: 8 },
         sm: { span: 5 },
-        xxl: { span: 2 },
+        xxl: { span: 8 },
       },
       wrapperCol: {
         xs: { span: 24 },
@@ -406,9 +406,35 @@ class Article extends React.Component {
               </Row>
 
 
-              <Form.Item label='内容'>
-                <Input placeholder="article_content" allowClear value={ this.state.articleAddData.article_content } onChange={(e) => this.inputDataChange(e, 'article_content')}/>
-              </Form.Item>
+              {/* <Form.Item label='内容'> */}
+                {/* <Input placeholder="article_content" allowClear value={ this.state.articleAddData.article_content } onChange={(e) => this.inputDataChange(e, 'article_content')}/> */}
+                <ReactWEditor
+                    config={{
+                      height: 400,
+                      onchangeTimeout: 1000
+                    }}
+                    defaultValue={'<h1>标题</h1>'}
+                    linkImgCallback={(src, alt, href) => {
+                        // 插入网络图片的回调事件
+                        console.log('图片 src ', src);
+                        console.log('图片文字说明', alt);
+                        console.log('跳转链接', href);
+                    }}
+                    onlineVideoCallback={(video) => {
+                        // 插入网络视频的回调事件
+                        console.log('插入视频内容', video);
+                    }}
+                    onChange={(html) => {
+                        console.log('onChange html:', html);
+                    }}
+                    onBlur={(html) => {
+                        console.log('onBlur html:', html);
+                    }}
+                    onFocus={(html) => {
+                        console.log('onFocus html:', html);
+                    }}
+                />
+              {/* </Form.Item> */}
             </Form>
         </Modal>
         {/* 头部 */}
