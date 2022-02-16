@@ -4,13 +4,14 @@ import { Select, Table, Form, Button, Input, message, Modal, Tag, Upload, Icon, 
 import api from '../../../api'
 import ReactWEditor from 'wangeditor-for-react';
 const { Option } = Select
-
 // function hasErrors(fieldsError) {
 //   return Object.keys(fieldsError).some(field => fieldsError[field]);
 // }
 class Article extends React.Component {
+
   constructor(props) {
     super(props);
+    this.editorRef = React.createRef();
     this.state = {
       upImgApi: 'http://127.0.0.1:3002/upload/img',
       loading: false,
@@ -139,20 +140,20 @@ class Article extends React.Component {
     if (company.code === 200) this.setState({article_company: company.data})
   }
 
-  // 新增用户
+  // 新增
     //取消新增弹窗显示
     handleAddCancel() {
-      console.log('取消新增弹窗显示')
       this.setState( {articleAddData: {}, addModalvisible: false, isEdit: false} )
+      //重新设置编辑器内容
+      this.editorRef.current.editor.txt.html('') // 重新设置编辑器内容
+      //销毁 this.editorRef.current.destroy()
     }
     //新增弹窗确认
     async handleAddOk() {
-      console.log('新增弹窗确认')
       let params = { ...this.state.articleAddData }
-
       if(this.state.isEdit){ //如果是编辑
         const {code, data} = await api.post('article/update', params)
-        if (code) { message.success('编辑成功！' + code); this.setState( {isEdit: false }) }
+        if (code) { message.success('编辑成功！' + code); this.setState( {isEdit: false}) }
         else {message.error(data)}
       }else{
         const {code, msg} = await api.post('article/add', params)
@@ -161,7 +162,15 @@ class Article extends React.Component {
       }
       this.getList()
       this.setState( {articleAddData: {}, addModalvisible: false} )
+      //重新设置编辑器内容
+      this.editorRef.current.editor.txt.html('') // 重新设置编辑器内容
     }
+
+
+  //article.content 改变
+  toWEditorChange(html) {
+    this.inputDataChange(null,'article_content',html)
+  }
 
   /**
   * 双向绑定 input 修改方法
@@ -177,12 +186,10 @@ class Article extends React.Component {
         [objkey]: value,//修改你要改的当前对象的那个属性值
       }
     });
-    console.log('this.state.articleAddData;',this.state.articleAddData)
   }
 
   //上传文章封面
   upAvatarimg(file) {
-    console.log(file)
     let imgurl = null;
     if(file.file.response){
       imgurl = file.file.response.path
@@ -191,7 +198,6 @@ class Article extends React.Component {
       console.log("上传失败")
     }
 
-    console.log('this.state.articleAddData;',this.state.articleAddData)
     // const {code, data} = await api.post('upload/img', params)
   }
   //日期选择弹窗
@@ -201,15 +207,14 @@ class Article extends React.Component {
   }
   //编辑弹窗显示
   async editClick (record) {
-    console.log('update',record)
     await this.setState( {articleAddData: {...record}, addModalvisible: true, isEdit: true} )
+    this.editorRef.current.editor.txt.html(record.article_content) // 重新设置编辑器内容
   }
 
   //删除
   //删除弹窗显示
   async delClick(record) {
     await this.setState( {articleItemData: record, delModalvisible: true} )
-    console.log(record,this.state.articleItemData)
   }
   //取消删除弹窗显示
   handleDelCancel() {
@@ -217,7 +222,6 @@ class Article extends React.Component {
   }
   //删除弹窗确认删除
   async handleDelOk() {
-    console.log(this.state.articleItemData)
     await api.post('article/del', {article_id: this.state.articleItemData.article_id})
     message.success('删除成功')
     this.getList()
@@ -236,7 +240,6 @@ class Article extends React.Component {
     // this.getList()
   }
   async toSearch () {
-    console.log('toSearch')
     this.getList()
   }
 
@@ -252,21 +255,18 @@ class Article extends React.Component {
 
   //选择标签
   handlChangTag (val) {
-    console.log(val)
     let insertVal = val.join()
     this.inputDataChange(null,'article_tag',insertVal)
   }
   handlChangCategory (val) {
-    console.log(val)
     let insertVal = val.join()
     this.inputDataChange(null,'article_category',insertVal)
   }
   handlChangCompany (val) {
-    console.log(val)
     let insertVal = val.join()
     this.inputDataChange(null,'article_company',insertVal)
   }
-
+  
   render() {
     const { articleItemData, isEdit, upImgApi } = this.state;
     const { article_tag, article_category, article_company } = this.state.articleAddData;
@@ -296,7 +296,7 @@ class Article extends React.Component {
         <Icon type={this.state.loading ? 'loading' : 'plus'} />
         <div className="ant-upload-text">Upload</div>
       </div>
-    );
+    )
     return (
       <div>
         {/* 确认删除弹窗 */}
@@ -409,11 +409,14 @@ class Article extends React.Component {
               {/* <Form.Item label='内容'> */}
                 {/* <Input placeholder="article_content" allowClear value={ this.state.articleAddData.article_content } onChange={(e) => this.inputDataChange(e, 'article_content')}/> */}
                 <ReactWEditor
+                    ref={this.editorRef}
                     config={{
                       height: 400,
-                      onchangeTimeout: 1000
+                      onchangeTimeout: 1000,
+                      uploadImgServer: 'http://127.0.0.1:3002/upload/img',
+                      uploadFileName: 'myfile'
                     }}
-                    defaultValue={'<h1>标题</h1>'}
+                    defaultValue={ '请输入' }
                     linkImgCallback={(src, alt, href) => {
                         // 插入网络图片的回调事件
                         console.log('图片 src ', src);
@@ -424,9 +427,7 @@ class Article extends React.Component {
                         // 插入网络视频的回调事件
                         console.log('插入视频内容', video);
                     }}
-                    onChange={(html) => {
-                        console.log('onChange html:', html);
-                    }}
+                    onChange={(html) => this.toWEditorChange(html)}
                     onBlur={(html) => {
                         console.log('onBlur html:', html);
                     }}
