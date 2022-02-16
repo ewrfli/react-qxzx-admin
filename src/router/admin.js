@@ -1,13 +1,18 @@
 import loadable from '../utils/loadable'
 
-const Tags = loadable(()=>import('../pages/admin/tags'))
-const Star = loadable(()=>import('../pages/admin/star'))
+
 const Home = loadable(()=>import('../pages/admin/home'))
-const Category = loadable(()=>import('../pages/admin/category'))
-const Company = loadable(()=>import('../pages/admin/company'))
 const Users = loadable(()=>import('../pages/admin/users'))
 const Article = loadable(()=>import('../pages/admin/article'))
-const ArticleItem = loadable(()=>import('../pages/admin/article/item'))
+// const ArticleItem = loadable(()=>import('../pages/admin/article/item'))
+const Tags = loadable(()=>import('../pages/admin/tags'))
+const Category = loadable(()=>import('../pages/admin/category'))
+const Company = loadable(()=>import('../pages/admin/company'))
+const Star = loadable(()=>import('../pages/admin/star'))
+
+const Comment = loadable(()=>import('../pages/admin/comment'))
+const Fans = loadable(()=>import('../pages/admin/fans'))
+const Banner = loadable(()=>import('../pages/admin/banner'))
 
 const routes = [
   {
@@ -60,17 +65,32 @@ const routes = [
     component: Star
   },
   {
-    icon: 'edit',
-    title: '新增文章',
-    path: '/admin/article-add',
-    component: ArticleItem
+    menu: true,
+    icon: 'star',
+    title: '评论',
+    path: '/admin/comment',
+    component: Comment
   },
   {
-    icon: 'edit',
-    title: '文章详情',
-    path: '/admin/article-edit/:id',
-    component: ArticleItem
+    menu: true,
+    icon: 'star',
+    title: '粉丝',
+    path: '/admin/fans',
+    component: Fans
+  },
+  {
+    menu: true,
+    icon: 'star',
+    title: 'Banner',
+    path: '/admin/banner',
+    component: Banner
   }
+  // {
+  //   icon: 'edit',
+  //   title: '文章详情',
+  //   path: '/admin/article-edit/:id',
+  //   component: ArticleItem
+  // }
 ]
 
 export default routes
