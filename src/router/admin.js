@@ -59,14 +59,7 @@ const routes = [
   },
   {
     menu: true,
-    icon: 'star',
-    title: '收藏',
-    path: '/admin/star',
-    component: Star
-  },
-  {
-    menu: true,
-    icon: 'star',
+    icon: 'folder',
     title: '评论',
     path: '/admin/comment',
     component: Comment
@@ -74,13 +67,20 @@ const routes = [
   {
     menu: true,
     icon: 'star',
+    title: '收藏',
+    path: '/admin/star',
+    component: Star
+  },
+  {
+    menu: true,
+    icon: 'tags',
     title: '粉丝',
     path: '/admin/fans',
     component: Fans
   },
   {
     menu: true,
-    icon: 'star',
+    icon: 'home',
     title: 'Banner',
     path: '/admin/banner',
     component: Banner

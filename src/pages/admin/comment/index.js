@@ -6,7 +6,7 @@ import api from '../../../api'
 // function hasErrors(fieldsError) {
 //   return Object.keys(fieldsError).some(field => fieldsError[field]);
 // }
-class Tags extends React.Component {
+class comments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,48 +14,66 @@ class Tags extends React.Component {
       loading: false,
       delModalvisible: false, //显示弹弹窗
       addModalvisible: false,
-      tagItemData: {},
-      tagAddData: {
-        tag_name: null,
-        tag_coverimg: null,
-        tag_desc: null,
-        tag_father_id: null,
+      commentItemData: {},
+      commentAddData: {
+        article_id: null,
+        user_id: null,
+        user_name: null,
+        comment_content: null,
+        comment_like_count: null,
+        comment_father_id: null,
       },
       isEdit: false,
-      search_tag_name: '',//
+      search_user_name: '',//
       pageNo: 1,
       pageSize: 10,
       total: null,
       data: [],
       columns: [
         {
-          title: '标签ID',
-          dataIndex: 'tag_id',
-          key: 'tag_id',
+          title: '评论ID',
+          dataIndex: 'comment_id',
+          key: 'comment_id',
           width: 80,
           align: 'center'
         },
         {
-          title: '标签名',
+          title: '用户名',
           width: 100,
-          key: 'tag_name',
-          dataIndex: 'tag_name',
+          key: 'user_name',
+          dataIndex: 'user_name',
           render: name => (
             <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
           )
         },
         {
-          title: '标签父ID',
-          dataIndex: 'tag_father_id',
-          key: 'tag_father_id',
-          width: 80,
+          title: '用户ID',
+          dataIndex: 'user_id',
+          key: 'user_id',
+          width: 100,
           align: 'center'
         },
         {
-          title: '标签描述',
-          key: 'tag_desc',
-          dataIndex: 'tag_desc',
-          width: 150,
+          title: '文章ID',
+          key: 'article_id',
+          dataIndex: 'article_id',
+          width: 100,
+          render: name => (
+            <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
+          )
+        },
+        {
+          title: '评论内容',
+          key: 'comment_content',
+          dataIndex: 'comment_content',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '  点赞量',
+          key: 'comment_like_count',
+          dataIndex: 'comment_like_count',
+          width: 100,
           align: 'center'
         },
         {
@@ -87,14 +105,11 @@ class Tags extends React.Component {
   async getList () {
     this.setState({loading: true})
     const params = {
-      tag_name: this.state.search_tag_name,
+      user_name: this.state.search_user_name,
       pageNo: this.state.pageNo,
       pageSize: this.state.pageSize
     }
-    const {data, total } = await api.get('tag/list', params)
-    // data.forEach((item, index) => {
-    //   item.index = this.state.pageSize * (this.state.pageNo - 1) + index + 1
-    // })
+    const {data, total } = await api.get('comment/list', params)
     this.setState({
       data,
       total,
@@ -106,24 +121,24 @@ class Tags extends React.Component {
     //取消新增弹窗显示
     handleAddCancel() {
       console.log('取消新增弹窗显示')
-      this.setState( {tagAddData: {}, addModalvisible: false, isEdit: false} )
+      this.setState( {commentAddData: {}, addModalvisible: false, isEdit: false} )
     }
     //新增弹窗确认
     async handleAddOk() {
       console.log('新增弹窗确认')
-      let params = { ...this.state.tagAddData }
+      let params = { ...this.state.commentAddData }
 
       if(this.state.isEdit){ //如果是编辑
-        const {code, data} = await api.post('tag/update', params)
+        const {code, data} = await api.post('comment/update', params)
         if (code) { message.success('编辑成功！' + code); this.setState( {isEdit: false }) }
         else {message.error(data)}
       }else{
-        const {code, data} = await api.post('tag/add', params)
+        const {code, data} = await api.post('comment/add', params)
         if (code) message.success('新增成功！' + code)
         else message.error(data)
       }
       this.getList()
-      this.setState( {tagAddData: {}, addModalvisible: false} )
+      this.setState( {commentAddData: {}, addModalvisible: false} )
     }
 
   /**
@@ -133,14 +148,14 @@ class Tags extends React.Component {
     let value = null
     event ? value = event.target.value : value = objvalue
     // let value = event.target.value || objvalue;
-    let tagAddData = this.state.tagAddData;
+    let commentAddData = this.state.commentAddData;
     this.setState({
-      tagAddData: {
-        ...tagAddData, //拷贝当前对象
+      commentAddData: {
+        ...commentAddData, //拷贝当前对象
         [objkey]: value,//修改你要改的当前对象的那个属性值
       }
     });
-    console.log('this.state.tagAddData;',this.state.tagAddData)
+    console.log('this.state.commentAddData;',this.state.commentAddData)
   }
 
   //上传用户头像
@@ -149,12 +164,12 @@ class Tags extends React.Component {
     let imgurl = null;
     if(file.file.response){
       imgurl = file.file.response.path
-      this.inputDataChange(null,'tag_coverimg',imgurl)
+      this.inputDataChange(null,'comment_coverimg',imgurl)
     }else{
       console.log("上传失败")
     }
 
-    console.log('this.state.tagAddData;',this.state.tagAddData)
+    console.log('this.state.commentAddData;',this.state.commentAddData)
     // const {code, data} = await api.post('upload/img', params)
   }
   //日期选择弹窗
@@ -165,36 +180,34 @@ class Tags extends React.Component {
   //编辑弹窗显示
   async editClick (record) {
     console.log('update',record)
-    await this.setState( {tagAddData: {...record}, addModalvisible: true, isEdit: true} )
+    await this.setState( {commentAddData: {...record}, addModalvisible: true, isEdit: true} )
   }
 
   //删除
   //删除弹窗显示
   async delClick(record) {
-    await this.setState( {tagItemData: record, delModalvisible: true} )
-    console.log(record,this.state.tagItemData)
+    await this.setState( {commentItemData: record, delModalvisible: true} )
+    console.log(record,this.state.commentItemData)
   }
   //取消删除弹窗显示
   handleDelCancel() {
-    this.setState( {tagItemData: {}, delModalvisible: false} )
+    this.setState( {commentItemData: {}, delModalvisible: false} )
   }
   //删除弹窗确认删除
   async handleDelOk() {
-    console.log(this.state.tagItemData)
-    await api.post('user/del', {user_id: this.state.tagItemData.user_id})
+    console.log(this.state.commentItemData)
+    await api.post('user/del', {user_id: this.state.commentItemData.user_id})
     message.success('删除成功')
     this.getList()
-    this.setState( {tagItemData: {}, delModalvisible: false} )
+    this.setState( {commentItemData: {}, delModalvisible: false} )
   }
 
 
   // 查询
   async handdleSearchChange (e) {
-    // console.log('e.target.value',e.target.value)
-    // this.setState({search_tag_name: e.target.value})
     await this.setState({
       pageNo: 1,
-      search_tag_name: e.target.value || ''
+      search_user_name: e.target.value || ''
     })
     // this.getList()
   }
@@ -214,7 +227,7 @@ class Tags extends React.Component {
   }
 
   render() {
-    const { tagItemData, isEdit, upImgApi } = this.state;
+    const { commentItemData, isEdit, upImgApi } = this.state;
     const formItemLayout = {
       labelCol: {
         xs: { span: 8 },
@@ -241,7 +254,7 @@ class Tags extends React.Component {
           visible={ this.state.delModalvisible }
           onOk={this.handleDelOk.bind(this)}
           onCancel={ this.handleDelCancel.bind(this) }>
-            <p>确认删除标签：{tagItemData ? tagItemData.tag_name : ''}</p>
+            <p>确认删除标签：{commentItemData ? commentItemData.comment_name : ''}</p>
         </Modal>
         {/* 添加弹窗 */}
         <Modal
@@ -251,37 +264,30 @@ class Tags extends React.Component {
           onCancel={ this.handleAddCancel.bind(this) }>
            
             <Form onSubmit={this.handleAddOk} {...formItemLayout}>
-            · <Form.Item label='标签Logo'>
-                <Upload
-                  name="myfile"
-                  listType="picture-card"
-                  className="avatar-uploader"
-                  showUploadList={false}
-                  action={upImgApi}
-                  onChange={e => this.upAvatarimg(e)}
-                >
-                  {this.state.tagAddData.tag_coverimg ? <img src={this.state.tagAddData.tag_coverimg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-                </Upload>
+              <Form.Item label='文章ID'>
+                <Input placeholder="请输入文章ID" allowClear value={ this.state.commentAddData.article_id } onChange={(e) => this.inputDataChange(e, 'article_id')}/>
               </Form.Item>
-              <Form.Item label='标签Logo'>
-                <Input placeholder="用户头像" allowClear value={ this.state.tagAddData.tag_coverimg } onChange={(e) => this.inputDataChange(e, 'tag_coverimg')}/>
+              <Form.Item label='用户ID'>
+                <Input placeholder="请输入用户ID" allowClear value={ this.state.commentAddData.user_id } onChange={(e) => this.inputDataChange(e, 'user_id')}/>
               </Form.Item>
-              <Form.Item label='标签名'>
-                <Input placeholder="请输入标签名" allowClear value={ this.state.tagAddData.tag_name } onChange={(e) => this.inputDataChange(e, 'tag_name')}/>
+              <Form.Item label='用户名'>
+                <Input placeholder="请输入用户名" allowClear value={ this.state.commentAddData.user_name } onChange={(e) => this.inputDataChange(e, 'user_name')}/>
               </Form.Item>
-              <Form.Item label='标签描述'>
-                <Input placeholder="请输入标签描述" allowClear value={ this.state.tagAddData.tag_desc } onChange={(e) => this.inputDataChange(e, 'tag_desc')}/>
+              <Form.Item label='评论内容'>
+                <Input placeholder="请输入评论内容" allowClear value={ this.state.commentAddData.comment_content } onChange={(e) => this.inputDataChange(e, 'comment_content')}/>
               </Form.Item>
-              <Form.Item label='父标签ID'>
-                <Input placeholder="请输入父标签ID" allowClear value={ this.state.tagAddData.tag_father_id } onChange={(e) => this.inputDataChange(e, 'tag_father_id')}/>
+              <Form.Item label='评论点赞量'>
+                <Input placeholder="请输入点赞量" allowClear value={ this.state.commentAddData.comment_like_count } onChange={(e) => this.inputDataChange(e, 'comment_like_count')}/>
               </Form.Item>
-
+              <Form.Item label='评论父ID'>
+                <Input placeholder="请输入评论父ID" allowClear value={ this.state.commentAddData.comment_father_id } onChange={(e) => this.inputDataChange(e, 'comment_father_id')}/>
+              </Form.Item>
             </Form>
         </Modal>
         {/* 头部 */}
         <Form layout="inline">
           <Form.Item>
-            <Input placeholder="请输入标签名搜索" value={ this.state.search_tag_name } onChange={ e => this.handdleSearchChange(e) } onPressEnter={ e => this.toSearch(e)} />
+            <Input placeholder="请输入用户名搜索" value={ this.state.search_user_name } onChange={ e => this.handdleSearchChange(e) } onPressEnter={ e => this.toSearch(e)} />
           </Form.Item>
           <Form.Item>
             <Button className='mr10' type="primary" onClick={ e => this.toSearch(e)}>search</Button>
@@ -304,7 +310,7 @@ class Tags extends React.Component {
         loading={ this.state.loading }
         columns={ this.state.columns }
         dataSource={ this.state.data }
-        rowKey={record => record.tag_id}
+        rowKey={record => record.comment_id}
         onChange={(page) => this.handleOnChange(page)}
       />
 
@@ -312,6 +318,6 @@ class Tags extends React.Component {
     )
   }
 }
-const article = Form.create({ name: 'horizontal_login' })(Tags)
+const article = Form.create({ name: 'horizontal_login' })(comments)
 
 export default article
