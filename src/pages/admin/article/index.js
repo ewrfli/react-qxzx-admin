@@ -140,9 +140,9 @@ class Article extends React.Component {
         if (code) { message.success('编辑成功！' + code); this.setState( {isEdit: false }) }
         else {message.error(data)}
       }else{
-        const {code, data} = await api.post('article/add', params)
+        const {code, msg} = await api.post('article/add', params)
         if (code) message.success('新增成功！' + code)
-        else message.error(data)
+        else message.error(msg)
       }
       this.getList()
       this.setState( {articleAddData: {}, addModalvisible: false} )
@@ -292,12 +292,19 @@ class Article extends React.Component {
               <Form.Item label='描述'>
                 <Input placeholder="描述" allowClear value={ this.state.articleAddData.article_desc } onChange={(e) => this.inputDataChange(e, 'article_desc')}/>
               </Form.Item>
-              <Form.Item label='发布用户名'>
-                <Input placeholder="发布用户名" allowClear value={ this.state.articleAddData.user_name } onChange={(e) => this.inputDataChange(e, 'user_name')}/>
-              </Form.Item>
-              <Form.Item label='查看权限'>
-                <Input placeholder="article_visible_power" allowClear value={ this.state.articleAddData.article_visible_power } onChange={(e) => this.inputDataChange(e, 'article_visible_power')}/>
-              </Form.Item>
+              <Row>
+                <Col className="gutter-row" span={12}>
+                  <Form.Item label='发布用户名'>
+                    <Input placeholder="发布用户名" allowClear value={ this.state.articleAddData.user_name } onChange={(e) => this.inputDataChange(e, 'user_name')}/>
+                  </Form.Item>
+                </Col>
+                <Col className="gutter-row" span={12}>
+                  <Form.Item label='查看权限'>
+                    <Input placeholder="article_visible_power" allowClear value={ this.state.articleAddData.article_visible_power } onChange={(e) => this.inputDataChange(e, 'article_visible_power')}/>
+                  </Form.Item>
+                </Col>
+              </Row>  
+
               <Form.Item label='话题标签'>
                 <Input placeholder="tag" allowClear value={ this.state.articleAddData.article_tag } onChange={(e) => this.inputDataChange(e, 'article_tag')}/>
               </Form.Item>
@@ -308,22 +315,24 @@ class Article extends React.Component {
                 <Input placeholder="company" allowClear value={ this.state.articleAddData.article_company } onChange={(e) => this.inputDataChange(e, 'article_company')}/>
               </Form.Item>
               <Row>
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={12}>
                   <Form.Item label='评论量'>
-                    <Input style={{marginLeft: '15px'}} placeholder="comment_count" allowClear value={ this.state.articleAddData.article_comment_count } onChange={(e) => this.inputDataChange(e, 'article_comment_count')}/>
+                    <Input placeholder="comment_count" allowClear value={ this.state.articleAddData.article_comment_count } onChange={(e) => this.inputDataChange(e, 'article_comment_count')}/>
                   </Form.Item>
                 </Col>
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={12}>
                   <Form.Item label='点赞量'>
                     <Input placeholder="like_count" allowClear value={ this.state.articleAddData.article_like_count } onChange={(e) => this.inputDataChange(e, 'article_like_count')}/>
                   </Form.Item>
                 </Col>
-                <Col className="gutter-row" span={6}>
+                </Row>
+                <Row>
+                <Col className="gutter-row" span={12}>
                   <Form.Item label='阅读量'>
                     <Input placeholder="read_count" allowClear value={ this.state.articleAddData.article_read_count } onChange={(e) => this.inputDataChange(e, 'article_read_count')}/>
                   </Form.Item>
                 </Col>
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={12}>
                   <Form.Item label='转发量'>
                     <Input placeholder="repost_count" allowClear value={ this.state.articleAddData.article_repost_count } onChange={(e) => this.inputDataChange(e, 'article_repost_count')}/>
                   </Form.Item>
