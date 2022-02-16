@@ -1,6 +1,6 @@
 import React from 'react'
-import { color, timetrans } from '../../../utils'
-import { Table, Form, Button, Input, message, Modal, Tag, Upload, Icon } from 'antd';
+import { color } from '../../../utils'
+import { Table, Form, Button, Input, message, Modal, Tag } from 'antd';
 import api from '../../../api'
 
 // function hasErrors(fieldsError) {
@@ -10,7 +10,6 @@ class comments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      upImgApi: 'http://127.0.0.1:3002/upload/img',
       loading: false,
       delModalvisible: false, //显示弹弹窗
       addModalvisible: false,
@@ -158,25 +157,6 @@ class comments extends React.Component {
     console.log('this.state.commentAddData;',this.state.commentAddData)
   }
 
-  //上传用户头像
-  upAvatarimg(file) {
-    console.log(file)
-    let imgurl = null;
-    if(file.file.response){
-      imgurl = file.file.response.path
-      this.inputDataChange(null,'comment_coverimg',imgurl)
-    }else{
-      console.log("上传失败")
-    }
-
-    console.log('this.state.commentAddData;',this.state.commentAddData)
-    // const {code, data} = await api.post('upload/img', params)
-  }
-  //日期选择弹窗
-  onDateChange(e){ 
-    let moent = timetrans(e._d)
-    this.inputDataChange(null,'user_birthday',moent)
-  }
   //编辑弹窗显示
   async editClick (record) {
     console.log('update',record)
@@ -227,7 +207,7 @@ class comments extends React.Component {
   }
 
   render() {
-    const { commentItemData, isEdit, upImgApi } = this.state;
+    const { commentItemData, isEdit } = this.state;
     const formItemLayout = {
       labelCol: {
         xs: { span: 8 },
@@ -240,12 +220,7 @@ class comments extends React.Component {
         md: { span: 12 }
       }
     }
-    const uploadButton = (
-      <div>
-        <Icon type={this.state.loading ? 'loading' : 'plus'} />
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    );
+
     return (
       <div>
         {/* 确认删除弹窗 */}
