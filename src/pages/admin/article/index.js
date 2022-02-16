@@ -1,7 +1,9 @@
 import React from 'react'
 import { color, timetrans } from '../../../utils'
-import { Table, Form, Button, Input, message, Modal, Tag, Upload, Icon, Row, Col} from 'antd';
+import { Select, Table, Form, Button, Input, message, Modal, Tag, Upload, Icon, Row, Col} from 'antd';
 import api from '../../../api'
+
+const { Option } = Select
 
 // function hasErrors(fieldsError) {
 //   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -34,6 +36,9 @@ class Article extends React.Component {
         article_read_count: null,
         article_repost_count: null,
       },
+      article_tag: [],
+      article_category: [],
+      article_company: [],
       isEdit: false,
       search_article_title: '',//
       pageNo: 1,
@@ -104,6 +109,7 @@ class Article extends React.Component {
   componentDidMount() {
     this.props.form.validateFields();
     this.getList()
+    this.getTagsList()
   }
   // 请求数据
   async getList () {
@@ -122,6 +128,15 @@ class Article extends React.Component {
       total,
       loading: false
       })
+  }
+
+  async getTagsList () {
+    const {data, code} = await api.get('tag/findall')
+    if (code === 200) this.setState({article_tag: data})
+    const category = await api.get('category/findall')
+    if (category.code === 200) this.setState({article_category: category.data})
+    const company = await api.get('company/findall')
+    if (company.code === 200) this.setState({article_company: company.data})
   }
 
   // 新增用户
@@ -235,8 +250,35 @@ class Article extends React.Component {
     this.getList()
   }
 
+  //选择标签
+  handlChangTag (val) {
+    console.log(val)
+    let insertVal = val.join()
+    this.inputDataChange(null,'article_tag',insertVal)
+  }
+  handlChangCategory (val) {
+    console.log(val)
+    let insertVal = val.join()
+    this.inputDataChange(null,'article_category',insertVal)
+  }
+  handlChangCompany (val) {
+    console.log(val)
+    let insertVal = val.join()
+    this.inputDataChange(null,'article_company',insertVal)
+  }
+
   render() {
     const { articleItemData, isEdit, upImgApi } = this.state;
+    const { article_tag, article_category, article_company } = this.state.articleAddData;
+    let categoryOption = this.state.article_category.map(item => {
+      return <Option value={item.category_name} key={item.category_name}>{item.category_name}</Option>
+    })
+    let tagOption = this.state.article_tag.map(item => {
+      return <Option value={item.tag_name} key={item.tag_name}>{item.tag_name}</Option>
+    })
+    let companyOption = this.state.article_company.map(item => {
+      return <Option value={item.company_name} key={item.company_name}>{item.company_name}</Option>
+    })
     const formItemLayout = {
       labelCol: {
         xs: { span: 8 },
@@ -306,13 +348,37 @@ class Article extends React.Component {
               </Row>  
 
               <Form.Item label='话题标签'>
-                <Input placeholder="tag" allowClear value={ this.state.articleAddData.article_tag } onChange={(e) => this.inputDataChange(e, 'article_tag')}/>
+                {/* <Input placeholder="tag" allowClear value={ this.state.articleAddData.article_tag } onChange={(e) => this.inputDataChange(e, 'article_tag')}/> */}
+                <Select
+                  mode="tags"
+                  style={{ width: '100%' }}
+                  placeholder={article_tag}
+                  addonBefore='tag'
+                  onChange={this.handlChangTag.bind(this)}>
+                  { tagOption }
+                </Select>
               </Form.Item>
               <Form.Item label='分类标签'>
-                <Input placeholder="category" allowClear value={ this.state.articleAddData.article_category } onChange={(e) => this.inputDataChange(e, 'article_category')}/>
+                {/* <Input placeholder="category" allowClear value={ this.state.articleAddData.article_category } onChange={(e) => this.inputDataChange(e, 'article_category')}/> */}
+                <Select
+                  mode="tags"
+                  style={{ width: '100%' }}
+                  placeholder={article_category}
+                  addonBefore='category'
+                  onChange={this.handlChangCategory.bind(this)}>
+                  { categoryOption }
+                </Select>
               </Form.Item>
               <Form.Item label='公司标签'>
-                <Input placeholder="company" allowClear value={ this.state.articleAddData.article_company } onChange={(e) => this.inputDataChange(e, 'article_company')}/>
+                {/* <Input placeholder="company" allowClear value={ this.state.articleAddData.article_company } onChange={(e) => this.inputDataChange(e, 'article_company')}/> */}
+                <Select
+                  mode="tags"
+                  style={{ width: '100%' }}
+                  placeholder={article_company}
+                  addonBefore='company'
+                  onChange={this.handlChangCompany.bind(this)}>
+                  { companyOption }
+                </Select>
               </Form.Item>
               <Row>
                 <Col className="gutter-row" span={12}>
