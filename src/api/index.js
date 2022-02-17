@@ -11,7 +11,7 @@ axios.defaults.baseURL = 'http://127.0.0.1:3002'
 //http request 请求拦截器
 axios.interceptors.request.use(
   config => {
-    const { url } = config;
+    // const { url } = config;
     config.headers = {
       // 'Content-Type':'application/x-www-form-urlencoded'
     }

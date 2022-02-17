@@ -15,7 +15,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div>
-        <Route exact path="/" render={() => <Redirect to="/web/home" push />} />
+        <Route exact path="/" render={() => <Redirect to="/admin/home" push />} />
         <Route exact path="/web" render={() => <Redirect to="/web/home" push />} />
         <Route path='/login' component={Login} />
 

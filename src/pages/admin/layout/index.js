@@ -1,7 +1,7 @@
 // import api from './api'
 import React, { Component } from 'react';
 import { Link, Route } from 'react-router-dom';
-import { Layout, Menu, Icon, Avatar, Dropdown } from 'antd'
+import { Layout, Menu, Icon, Avatar, Dropdown, message } from 'antd'
 import routes from '../../../router/admin'
 import './index.less'
 
@@ -15,7 +15,7 @@ class App extends Component {
       collapsed: false,
       data: 'hello',
       person: '',
-      userName: 'T-admin' || ''
+      adminName: localStorage.getItem('adminName') || ''
     }
   }
   toggle = () => {
@@ -30,7 +30,10 @@ class App extends Component {
     sessionStorage.setItem('menuItmeKey', String(item.key))
   }
   handleClickDrop () {
+    message.success('退出登录')
     this.props.history.push('/login')
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminName');
   }
   menuItem = () => {
     return routes.filter(item => item.menu).map((item, index) => {
@@ -70,7 +73,7 @@ class App extends Component {
                   onClick={this.toggle}
                 />
                 <span className='user'>
-                  <Avatar style={{ backgroundColor: '#f56a00' }}>{this.state.userName}</Avatar>
+                  <Avatar style={{ backgroundColor: '#f56a00' }}>{this.state.adminName}</Avatar>
                   <Dropdown overlay={menu} className='ml10'>
                       <Icon type="down" />
                   </Dropdown>
