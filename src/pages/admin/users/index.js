@@ -61,6 +61,13 @@ class User extends React.Component {
           align: 'center'
         },
         {
+          title: '用户权限',
+          key: 'user_power',
+          dataIndex: 'user_power',
+          width: 150,
+          align: 'center'
+        },
+        {
           title: '创建时间',
           key: 'createdAt',
           dataIndex: 'createdAt'

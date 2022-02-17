@@ -1,0 +1,12 @@
+.login {
+  width: 99vw;
+  height: 99vh;
+  position: relative;
+  background-color: #e9ebec;
+}
+.login-form {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%);
+}
