@@ -208,6 +208,7 @@ class Article extends React.Component {
   //编辑弹窗显示
   async editClick (record) {
     await this.setState( {articleAddData: {...record}, addModalvisible: true, isEdit: true} )
+    console.log('articleAddData', this.state.articleAddData)
     this.editorRef.current.editor.txt.html(record.article_content) // 重新设置编辑器内容
   }
 
