@@ -74,7 +74,7 @@ class Article extends React.Component {
           key: 'article_desc',
           dataIndex: 'article_desc',
           width: 150,
-          align: 'center'
+          ellipsis: true
         },
         {
           title: '分类',
@@ -107,9 +107,9 @@ class Article extends React.Component {
           )
         },
         {
-          title: '创建时间',
-          key: 'createdAt',
-          dataIndex: 'createdAt'
+          title: '更新时间',
+          key: 'updatedAt',
+          dataIndex: 'updatedAt'
         },
         {
           title: '操作',
@@ -348,6 +348,9 @@ class Article extends React.Component {
                 >
                   {this.state.articleAddData.article_coverimg ? <img src={this.state.articleAddData.article_coverimg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                 </Upload>
+              </Form.Item>
+              <Form.Item label='封面地址'>
+                <Input placeholder="" allowClear value={ this.state.articleAddData.article_coverimg } onChange={(e) => this.inputDataChange(e, 'article_coverimg')}/>
               </Form.Item>
               <Form.Item label='标题'>
                 <Input placeholder="标题" allowClear value={ this.state.articleAddData.article_title } onChange={(e) => this.inputDataChange(e, 'article_title')}/>
