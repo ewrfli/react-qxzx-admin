@@ -167,6 +167,8 @@ class Article extends React.Component {
       //重新设置编辑器内容
       this.editorRef.current.editor.txt.html('') // 重新设置编辑器内容
       //销毁 this.editorRef.current.destroy()
+      
+      console.log('新增/编辑弹窗取消', this.state.addModalvisible.article_tag)
     }
     //新增弹窗确认
     async handleAddOk() {
@@ -182,6 +184,7 @@ class Article extends React.Component {
       }
       this.getList()
       this.setState( {articleAddData: {}, addModalvisible: false} )
+      console.log('新增/编辑弹窗确认', this.state.addModalvisible.article_tag)
       //重新设置编辑器内容
       this.editorRef.current.editor.txt.html('') // 重新设置编辑器内容
     }
@@ -377,11 +380,12 @@ class Article extends React.Component {
               </Row>  
 
               <Form.Item label='话题标签'>
-                {/* <Input placeholder="tag" allowClear value={ this.state.articleAddData.article_tag } onChange={(e) => this.inputDataChange(e, 'article_tag')}/> */}
+                <Input placeholder="tag" allowClear value={ this.state.articleAddData.article_tag } onChange={(e) => this.inputDataChange(e, 'article_tag')}/>
                 <Select
                   mode="tags"
                   style={{ width: '100%' }}
-                  placeholder={article_tag}
+                  // value={ this.state.articleAddData ? this.state.articleAddData.article_tag : null}
+                  placeholder={this.state.articleAddData ? this.state.articleAddData.article_tag : null}
                   addonBefore='tag'
                   onChange={this.handlChangTag.bind(this)}>
                   { tagOption }
