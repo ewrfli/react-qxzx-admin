@@ -359,12 +359,17 @@ class Article extends React.Component {
                 <Input placeholder="描述" allowClear value={ this.state.articleAddData.article_desc } onChange={(e) => this.inputDataChange(e, 'article_desc')}/>
               </Form.Item>
               <Row>
-                <Col className="gutter-row" span={12}>
+                <Col className="gutter-row" span={8}>
                   <Form.Item label='发布用户名'>
                     <Input placeholder="发布用户名" allowClear value={ this.state.articleAddData.user_name } onChange={(e) => this.inputDataChange(e, 'user_name')}/>
                   </Form.Item>
                 </Col>
-                <Col className="gutter-row" span={12}>
+                <Col className="gutter-row" span={8}>
+                  <Form.Item label='发布用户ID'>
+                    <Input placeholder="发布用户ID" allowClear value={ this.state.articleAddData.user_id } onChange={(e) => this.inputDataChange(e, 'user_id')}/>
+                  </Form.Item>
+                </Col>
+                <Col className="gutter-row" span={8}>
                   <Form.Item label='查看权限'>
                     <Input placeholder="article_visible_power" allowClear value={ this.state.articleAddData.article_visible_power } onChange={(e) => this.inputDataChange(e, 'article_visible_power')}/>
                   </Form.Item>
