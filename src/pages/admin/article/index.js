@@ -67,10 +67,7 @@ class Article extends React.Component {
           title: '标题',
           width: 100,
           key: 'article_title',
-          dataIndex: 'article_title',
-          render: name => (
-            <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
-          )
+          dataIndex: 'article_title'
         },
         {
           title: '描述',
@@ -80,11 +77,34 @@ class Article extends React.Component {
           align: 'center'
         },
         {
-          title: '阅读量',
+          title: '分类',
           width: 100,
-          key: 'article_like_count',
-          dataIndex: 'article_like_count',
-          align: 'center'
+          key: 'article_category',
+          dataIndex: 'article_category',
+          align: 'center',
+          render: name => (
+            <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
+          )
+        },
+        {
+          title: '标签',
+          width: 100,
+          key: 'article_tag',
+          dataIndex: 'article_tag',
+          align: 'center',
+          render: name => (
+            <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
+          )
+        },
+        {
+          title: '公司',
+          width: 100,
+          key: 'article_company',
+          dataIndex: 'article_company',
+          align: 'center',
+          render: name => (
+            <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
+          )
         },
         {
           title: '创建时间',
