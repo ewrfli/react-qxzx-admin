@@ -91,8 +91,8 @@ class App extends Component {
                   ))}
                 </Content>
               </div>
-              <Footer style={{ textAlign: 'center' }}>
-                Created by Go
+              <Footer style={{ textAlign: 'center'}}>
+                Created by qxzx
               </Footer>
             </Layout>
           </Layout>
