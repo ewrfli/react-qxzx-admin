@@ -293,7 +293,7 @@ class Article extends React.Component {
   
   render() {
     const { articleItemData, isEdit, upImgApi } = this.state;
-    const { article_tag, article_category, article_company } = this.state.articleAddData;
+    const { article_category, article_company } = this.state.articleAddData;
     let categoryOption = this.state.article_category.map(item => {
       return <Option value={item.category_name} key={item.category_name}>{item.category_name}</Option>
     })

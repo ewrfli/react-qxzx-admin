@@ -19,6 +19,7 @@ class Fans extends React.Component {
         user_id: null,
         attention_user_id: null,
         attention_user_name: null,
+        user_category: null
       },
       isEdit: false,
       search_user_name: '',//
@@ -35,32 +36,26 @@ class Fans extends React.Component {
           align: 'center'
         },
         {
-          title: '用户名',
+          title: '用户ID',
+          dataIndex: 'attention_user_id',
+          key: 'attention_user_id',
           width: 100,
-          key: 'user_name',
-          dataIndex: 'user_name',
+          align: 'center',
           render: name => (
             <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
           )
         },
         {
-          title: '用户ID',
-          dataIndex: 'user_id',
-          key: 'user_id',
-          width: 100,
-          align: 'center'
-        },
-        {
-          title: '关注',
-          key: 'attention_user_name',
-          dataIndex: 'attention_user_name',
-          width: 100,
-          align: 'center'
-        },
-        {
           title: '关注用户ID',
-          key: 'attention_user_id',
-          dataIndex: 'attention_user_id',
+          key: 'user_id',
+          dataIndex: 'user_id',
+          width: 100,
+          align: 'center'
+        },
+        {
+          title: '关注类别',
+          key: 'user_category',
+          dataIndex: 'user_category',
           width: 100,
           align: 'center'
         },
@@ -93,7 +88,7 @@ class Fans extends React.Component {
   async getList () {
     this.setState({loading: true})
     const params = {
-      user_name: this.state.search_user_name,
+      user_id: this.state.search_user_name,
       pageNo: this.state.pageNo,
       pageSize: this.state.pageSize
     }
@@ -167,7 +162,7 @@ class Fans extends React.Component {
   //删除弹窗确认删除
   async handleDelOk() {
     console.log(this.state.fansItemData)
-    await api.post('user/del', {user_id: this.state.fansItemData.user_id})
+    await api.post('fans/del', {fins_id: this.state.fansItemData.fins_id})
     message.success('删除成功')
     this.getList()
     this.setState( {fansItemData: {}, delModalvisible: false} )
@@ -232,25 +227,22 @@ class Fans extends React.Component {
            
             <Form onSubmit={this.handleAddOk} {...formItemLayout}>
    
-              <Form.Item label='用户名'>
-                <Input placeholder="请输入标签名" allowClear value={ this.state.fansAddData.user_name } onChange={(e) => this.inputDataChange(e, 'user_name')}/>
-              </Form.Item>
+
               <Form.Item label='用户ID'>
-                <Input placeholder="请输入标签描述" allowClear value={ this.state.fansAddData.user_id } onChange={(e) => this.inputDataChange(e, 'user_id')}/>
-              </Form.Item>
-              <Form.Item label='关注用户'>
-                <Input placeholder="请输入标签名" allowClear value={ this.state.fansAddData.attention_user_name } onChange={(e) => this.inputDataChange(e, 'attention_user_name')}/>
+                <Input placeholder="请输入用户ID" allowClear value={ this.state.fansAddData.attention_user_id } onChange={(e) => this.inputDataChange(e, 'attention_user_id')}/>
               </Form.Item>
               <Form.Item label='关注用户ID'>
-                <Input placeholder="请输入标签描述" allowClear value={ this.state.fansAddData.attention_user_id } onChange={(e) => this.inputDataChange(e, 'attention_user_id')}/>
+                <Input placeholder="请输入关注用户ID" allowClear value={ this.state.fansAddData.user_id } onChange={(e) => this.inputDataChange(e, 'user_id')}/>
               </Form.Item>
-
+              <Form.Item label='关注用户类别'>
+                <Input placeholder="请输入关注用户类别" allowClear value={ this.state.fansAddData.user_category } onChange={(e) => this.inputDataChange(e, 'user_category')}/>
+              </Form.Item>
             </Form>
         </Modal>
         {/* 头部 */}
         <Form layout="inline">
           <Form.Item>
-            <Input placeholder="请输入用户名搜索" value={ this.state.search_fans_name } onChange={ e => this.handdleSearchChange(e) } onPressEnter={ e => this.toSearch(e)} />
+            <Input placeholder="请输入用户id搜索" value={ this.state.search_fans_name } onChange={ e => this.handdleSearchChange(e) } onPressEnter={ e => this.toSearch(e)} />
           </Form.Item>
           <Form.Item>
             <Button className='mr10' type="primary" onClick={ e => this.toSearch(e)}>search</Button>
