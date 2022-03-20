@@ -16,12 +16,13 @@ class Company extends React.Component {
       addModalvisible: false,
       companyItemData: {},
       companyAddData: {
-        company_name: null,
-        company_coverimg: null,
-        company_desc: null,
-        company_category_name: null,
-        company_tag_name: null,
-        company_content: null,
+        risk_name: null,
+        risk_coverimg: null,
+        risk_desc: null,
+        risk_tag: null,
+        risk_grade: null,
+        company_id: null,
+        risk_date: null,
       },
       isEdit: false,
       search_company_name: '',//
@@ -31,46 +32,48 @@ class Company extends React.Component {
       data: [],
       columns: [
         {
-          title: '公司ID',
-          dataIndex: 'company_id',
-          key: 'company_id',
+          title: '风险ID',
+          dataIndex: 'risk_id',
+          key: 'risk_id',
           width: 80,
           align: 'center'
         },
         {
-          title: '公司名',
+          title: '风险名称',
           width: 100,
-          key: 'company_name',
-          dataIndex: 'company_name',
+          key: 'risk_name',
+          dataIndex: 'risk_name',
           render: name => (
             <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
           )
         },
         {
-          title: '公司描述',
-          key: 'company_desc',
-          dataIndex: 'company_desc',
+          title: '风险等级',
+          width: 100,
+          key: 'risk_grade',
+          dataIndex: 'risk_grade',
+          render: name => (
+            <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
+          )
+        },
+        {
+          title: '公司id',
+          key: 'company_id',
+          dataIndex: 'company_id',
+          width: 80,
+          align: 'center'
+        },
+        {
+          title: '风险标签',
+          dataIndex: 'risk_tag',
+          key: 'risk_tag',
           width: 130,
           align: 'center'
         },
         {
-          title: '公司分类',
-          dataIndex: 'company_category_name',
-          key: 'company_category_name',
-          width: 80,
-          align: 'center'
-        },
-        {
-          title: '公司标签',
-          dataIndex: 'company_tag_name',
-          key: 'company_tag_name',
-          width: 80,
-          align: 'center'
-        },
-        {
-          title: '创建时间',
-          key: 'createdAt',
-          dataIndex: 'createdAt'
+          title: '风险时间',
+          key: 'risk_date',
+          dataIndex: 'risk_date'
         },
         {
           title: '操作',
@@ -96,11 +99,10 @@ class Company extends React.Component {
   async getList () {
     this.setState({loading: true})
     const params = {
-      company_name: this.state.search_company_name,
       pageNo: this.state.pageNo,
       pageSize: this.state.pageSize
     }
-    const {data, total } = await api.get('company/hlist', params)
+    const {data, total } = await api.get('risk/list', params)
     // data.forEach((item, index) => {
     //   item.index = this.state.pageSize * (this.state.pageNo - 1) + index + 1
     // })
@@ -123,11 +125,11 @@ class Company extends React.Component {
       let params = { ...this.state.companyAddData }
 
       if(this.state.isEdit){ //如果是编辑
-        const {code, data} = await api.post('company/update', params)
+        const {code, data} = await api.post('risk/update', params)
         if (code) { message.success('编辑成功！' + code); this.setState( {isEdit: false }) }
         else {message.error(data)}
       }else{
-        const {code, data} = await api.post('company/add', params)
+        const {code, data} = await api.post('risk/add', params)
         if (code) message.success('新增成功！' + code)
         else message.error(data)
       }
@@ -152,13 +154,13 @@ class Company extends React.Component {
     console.log('this.state.companyAddData;',this.state.companyAddData)
   }
 
-  //上传用户头像
+  //上传
   upAvatarimg(file) {
     console.log(file)
     let imgurl = null;
     if(file.file.response){
       imgurl = file.file.response.path
-      this.inputDataChange(null,'company_coverimg',imgurl)
+      this.inputDataChange(null,'risk_coverimg',imgurl)
     }else{
       console.log("上传失败")
     }
@@ -254,13 +256,13 @@ class Company extends React.Component {
         </Modal>
         {/* 添加弹窗 */}
         <Modal
-          title={isEdit ? "编辑公司" : "添加公司"}
+          title={isEdit ? "编辑风险" : "添加风险"}
           visible={ this.state.addModalvisible }
           onOk={this.handleAddOk.bind(this)}
           onCancel={ this.handleAddCancel.bind(this) }>
            
             <Form onSubmit={this.handleAddOk} {...formItemLayout}>
-            · <Form.Item label='公司Logo'>
+            · <Form.Item label='风险Logo'>
                 <Upload
                   name="myfile"
                   listType="picture-card"
@@ -269,33 +271,36 @@ class Company extends React.Component {
                   action={upImgApi}
                   onChange={e => this.upAvatarimg(e)}
                 >
-                  {this.state.companyAddData.company_coverimg ? <img src={this.state.companyAddData.company_coverimg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                  {this.state.companyAddData.risk_coverimg ? <img src={this.state.companyAddData.risk_coverimg} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                 </Upload>
               </Form.Item>
-              <Form.Item label='公司Logo'>
-                <Input placeholder="公司Logo" allowClear value={ this.state.companyAddData.company_coverimg } onChange={(e) => this.inputDataChange(e, 'company_coverimg')}/>
+              <Form.Item label='风险Logo'>
+                <Input placeholder="风险Logo" allowClear value={ this.state.companyAddData.risk_coverimg } onChange={(e) => this.inputDataChange(e, 'risk_coverimg')}/>
               </Form.Item>
-              <Form.Item label='公司名'>
-                <Input placeholder="请输入公司名" allowClear value={ this.state.companyAddData.company_name } onChange={(e) => this.inputDataChange(e, 'company_name')}/>
+              <Form.Item label='风险名'>
+                <Input placeholder="请输入风险名" allowClear value={ this.state.companyAddData.risk_name } onChange={(e) => this.inputDataChange(e, 'risk_name')}/>
               </Form.Item>
-              <Form.Item label='公司描述'>
-                <Input placeholder="请输入公司描述" allowClear value={ this.state.companyAddData.company_desc } onChange={(e) => this.inputDataChange(e, 'company_desc')}/>
+              <Form.Item label='风险描述'>
+                <Input placeholder="请输入风险描述" allowClear value={ this.state.companyAddData.risk_desc } onChange={(e) => this.inputDataChange(e, 'risk_desc')}/>
               </Form.Item>
-              <Form.Item label='公司分类名'>
-                <Input placeholder="请输入公司分类名" allowClear value={ this.state.companyAddData.company_category_name } onChange={(e) => this.inputDataChange(e, 'company_category_name')}/>
+              <Form.Item label='风险标签'>
+                <Input placeholder="请输入风险标签" allowClear value={ this.state.companyAddData.risk_tag } onChange={(e) => this.inputDataChange(e, 'risk_tag')}/>
               </Form.Item>
-              <Form.Item label='公司标签名'>
-                <Input placeholder="请输入公司标签名" allowClear value={ this.state.companyAddData.company_tag_name } onChange={(e) => this.inputDataChange(e, 'company_tag_name')}/>
+              <Form.Item label='风险等级'>
+                <Input placeholder="请输入风险等级1/2/3" allowClear value={ this.state.companyAddData.risk_grade } onChange={(e) => this.inputDataChange(e, 'risk_grade')}/>
               </Form.Item>
-              <Form.Item label='公司内容'>
-                <Input placeholder="请输入公司内容" allowClear value={ this.state.companyAddData.company_content } onChange={(e) => this.inputDataChange(e, 'company_content')}/>
+              <Form.Item label='公司ID'>
+                <Input placeholder="请输入公司ID" allowClear value={ this.state.companyAddData.company_id } onChange={(e) => this.inputDataChange(e, 'company_id')}/>
+              </Form.Item>
+              <Form.Item label='风险日期'>
+                <Input placeholder="请输入风险日期xxxx-xx-xx" allowClear value={ this.state.companyAddData.risk_date } onChange={(e) => this.inputDataChange(e, 'risk_date')}/>
               </Form.Item>
             </Form>
         </Modal>
         {/* 头部 */}
         <Form layout="inline">
           <Form.Item>
-            <Input placeholder="请输入公司名搜索" value={ this.state.search_company_name } onChange={ e => this.handdleSearchChange(e) } onPressEnter={ e => this.toSearch(e)} />
+            <Input placeholder="请输入风险名搜索" value={ this.state.search_company_name } onChange={ e => this.handdleSearchChange(e) } onPressEnter={ e => this.toSearch(e)} />
           </Form.Item>
           <Form.Item>
             <Button className='mr10' type="primary" onClick={ e => this.toSearch(e)}>search</Button>

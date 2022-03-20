@@ -8,6 +8,7 @@ const Article = loadable(()=>import('../pages/admin/article'))
 const Tags = loadable(()=>import('../pages/admin/tags'))
 const Category = loadable(()=>import('../pages/admin/category'))
 const Company = loadable(()=>import('../pages/admin/company'))
+const Risk = loadable(()=>import('../pages/admin/risk'))
 const Star = loadable(()=>import('../pages/admin/star'))
 
 const Comment = loadable(()=>import('../pages/admin/comment'))
@@ -56,6 +57,13 @@ const routes = [
     title: '公司',
     path: '/admin/company',
     component: Company
+  },
+  {
+    menu: true,
+    icon: 'edit',
+    title: '风险',
+    path: '/admin/risk',
+    component: Risk
   },
   {
     menu: true,
