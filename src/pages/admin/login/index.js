@@ -114,7 +114,7 @@ class login extends React.Component {
               }}
           />
         <Card className="login-form" style={{width: 300, borderRadius: 4, textAlign: 'center'}}>
-          <h3 style={{marginBottom: 20, fontSize: 20, fontWeight: 600}}>qxzx后台管理系统</h3>
+          <h3 style={{marginBottom: 20, fontSize: 20, fontWeight: 600}}>企险资讯后台管理系统</h3>
           <Form onSubmit={this.handleSubmit}>
             <Form.Item>
               {getFieldDecorator('admin_name', {

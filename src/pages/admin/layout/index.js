@@ -60,7 +60,8 @@ class App extends Component {
               trigger={null}
               collapsible
               collapsed={this.state.collapsed}>
-              <div className={logoClass} />
+              {/* <div className={logoClass} /> */}
+              <div className={logoClass}>企险资讯后台管理系统</div>
               <Menu theme="dark" mode="inline" defaultSelectedKeys={ [sessionStorage.getItem('menuItmeKey') || '0'] }>
                 { this.menuItem() }
               </Menu>
