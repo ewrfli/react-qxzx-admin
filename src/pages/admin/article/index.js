@@ -48,7 +48,7 @@ class Article extends React.Component {
       data: [],
       columns: [
         {
-          title: '文章ID',
+          title: '资讯ID',
           dataIndex: 'article_id',
           key: 'article_id',
           width: 80,
@@ -211,7 +211,7 @@ class Article extends React.Component {
     });
   }
 
-  //上传文章封面
+  //上传资讯封面
   upAvatarimg(file) {
     let imgurl = null;
     if(file.file.response){
@@ -329,7 +329,7 @@ class Article extends React.Component {
           visible={ this.state.delModalvisible }
           onOk={this.handleDelOk.bind(this)}
           onCancel={ this.handleDelCancel.bind(this) }>
-            <p>确认删除文章：{articleItemData ? articleItemData.article_title : ''}</p>
+            <p>确认删除资讯：{articleItemData ? articleItemData.article_title : ''}</p>
         </Modal>
         {/* 添加用户弹窗 */}
         <Modal
@@ -340,7 +340,7 @@ class Article extends React.Component {
           onCancel={ this.handleAddCancel.bind(this) }>
            
             <Form onSubmit={this.handleAddOk} {...formItemLayout}>
-            · <Form.Item label='文章封面'>
+            · <Form.Item label='资讯封面'>
                 <Upload
                   name="myfile"
                   listType="picture-card"

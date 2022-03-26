@@ -53,7 +53,7 @@ class comments extends React.Component {
           align: 'center'
         },
         {
-          title: '文章ID',
+          title: '资讯ID',
           key: 'article_id',
           dataIndex: 'article_id',
           width: 100,
@@ -239,8 +239,8 @@ class comments extends React.Component {
           onCancel={ this.handleAddCancel.bind(this) }>
            
             <Form onSubmit={this.handleAddOk} {...formItemLayout}>
-              <Form.Item label='文章ID'>
-                <Input placeholder="请输入文章ID" allowClear value={ this.state.commentAddData.article_id } onChange={(e) => this.inputDataChange(e, 'article_id')}/>
+              <Form.Item label='资讯ID'>
+                <Input placeholder="请输入资讯ID" allowClear value={ this.state.commentAddData.article_id } onChange={(e) => this.inputDataChange(e, 'article_id')}/>
               </Form.Item>
               <Form.Item label='用户ID'>
                 <Input placeholder="请输入用户ID" allowClear value={ this.state.commentAddData.user_id } onChange={(e) => this.inputDataChange(e, 'user_id')}/>

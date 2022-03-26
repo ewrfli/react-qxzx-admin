@@ -53,14 +53,14 @@ class Star extends React.Component {
           )
         },
         {
-          title: '收藏文章ID',
+          title: '收藏资讯ID',
           dataIndex: 'article_id',
           key: 'article_id',
           width: 100,
           align: 'center'
         },
         {
-          title: '收藏文章标题',
+          title: '收藏资讯标题',
           dataIndex: 'article_title',
           key: 'article_title',
           width: 100,
@@ -242,11 +242,11 @@ class Star extends React.Component {
               <Form.Item label='用户名'>
                 <Input placeholder="请输入用户名" allowClear value={ this.state.starAddData.user_name } onChange={(e) => this.inputDataChange(e, 'user_name')}/>
               </Form.Item>
-              <Form.Item label='文章ID'>
-                <Input placeholder="请输入文章ID" allowClear value={ this.state.starAddData.article_id } onChange={(e) => this.inputDataChange(e, 'article_id')}/>
+              <Form.Item label='资讯ID'>
+                <Input placeholder="请输入资讯ID" allowClear value={ this.state.starAddData.article_id } onChange={(e) => this.inputDataChange(e, 'article_id')}/>
               </Form.Item>
-              <Form.Item label='文章标题'>
-                <Input placeholder="请输入文章标题" allowClear value={ this.state.starAddData.article_title } onChange={(e) => this.inputDataChange(e, 'article_title')}/>
+              <Form.Item label='资讯标题'>
+                <Input placeholder="请输入资讯标题" allowClear value={ this.state.starAddData.article_title } onChange={(e) => this.inputDataChange(e, 'article_title')}/>
               </Form.Item>
             </Form>
         </Modal>

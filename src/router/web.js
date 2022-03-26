@@ -37,7 +37,7 @@ const webRoutes = [
     },
     {
       icon: 'more',
-      title: '文章详情',
+      title: '资讯详情',
       path: '/web/detail/:id',
       component: ArticleDetail
     }

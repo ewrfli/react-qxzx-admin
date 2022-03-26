@@ -55,7 +55,7 @@ class SiderCustom extends Component {
         </div>
         <div className="recent-article">
           <Card bordered={false}>
-            <Divider orientation="left">最近文章</Divider>
+            <Divider orientation="left">最近资讯</Divider>
             <ul className="recent-list">
               { list }
             </ul>

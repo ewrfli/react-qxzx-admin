@@ -33,7 +33,7 @@ const routes = [
   {
     menu: true,
     icon: 'edit',
-    title: '文章',
+    title: '资讯',
     path: '/admin/article',
     component: Article
   },
@@ -95,7 +95,7 @@ const routes = [
   }
   // {
   //   icon: 'edit',
-  //   title: '文章详情',
+  //   title: '资讯详情',
   //   path: '/admin/article-edit/:id',
   //   component: ArticleItem
   // }
