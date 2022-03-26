@@ -413,6 +413,17 @@ class Article extends React.Component {
                   { companyOption }
                 </Select>
               </Form.Item>
+              <Form.Item label='公司id'>
+                <Input placeholder="companyid" allowClear value={ this.state.articleAddData.article_company_id } onChange={(e) => this.inputDataChange(e, 'article_company_id')}/>
+                {/* <Select
+                  mode="tags"
+                  style={{ width: '100%' }}
+                  placeholder={article_company}
+                  addonBefore='company'
+                  onChange={this.handlChangCompany.bind(this)}>
+                  { companyOption }
+                </Select> */}
+              </Form.Item>
               <Row>
                 <Col className="gutter-row" span={12}>
                   <Form.Item label='评论量'>
