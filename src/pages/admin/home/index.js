@@ -185,23 +185,23 @@ const DemoArea = () => {
 const DemoPie = () => {
   const data = [
     {
-      type: '分类一',
+      type: '沪深',
       value: 27,
     },
     {
-      type: '分类二',
+      type: '港股',
       value: 25,
     },
     {
-      type: '分类三',
+      type: '美股',
       value: 18,
     },
     {
-      type: '分类四',
+      type: '互联网',
       value: 15,
     },
     {
-      type: '分类五',
+      type: '汽车',
       value: 10,
     },
     {
@@ -293,92 +293,92 @@ const DemoBar = () => {
       {
         year: '1991',
         value: 3,
-        type: 'Lon',
+        type: '女',
       },
       {
         year: '1992',
         value: 4,
-        type: 'Lon',
+        type: '女',
       },
       {
         year: '1993',
-        value: 3.5,
-        type: 'Lon',
+        value: 3,
+        type: '女',
       },
       {
         year: '1994',
         value: 5,
-        type: 'Lon',
+        type: '女',
       },
       {
         year: '1995',
-        value: 4.9,
-        type: 'Lon',
+        value: 4,
+        type: '女',
       },
       {
         year: '1996',
         value: 6,
-        type: 'Lon',
+        type: '女',
       },
       {
         year: '1997',
         value: 7,
-        type: 'Lon',
+        type: '女',
       },
       {
         year: '1998',
         value: 9,
-        type: 'Lon',
+        type: '女',
       },
       {
         year: '1999',
         value: 13,
-        type: 'Lon',
+        type: '女',
       },
       {
         year: '1991',
         value: 3,
-        type: 'Bor',
+        type: '男',
       },
       {
         year: '1992',
         value: 4,
-        type: 'Bor',
+        type: '男',
       },
       {
         year: '1993',
-        value: 3.5,
-        type: 'Bor',
+        value: 3,
+        type: '男',
       },
       {
         year: '1994',
         value: 5,
-        type: 'Bor',
+        type: '男',
       },
       {
         year: '1995',
-        value: 4.9,
-        type: 'Bor',
+        value: 4,
+        type: '男',
       },
       {
         year: '1996',
         value: 6,
-        type: 'Bor',
+        type: '男',
       },
       {
         year: '1997',
         value: 7,
-        type: 'Bor',
+        type: '男',
       },
       {
         year: '1998',
         value: 9,
-        type: 'Bor',
+        type: '男',
       },
       {
         year: '1999',
         value: 13,
-        type: 'Bor',
+        type: '男',
       },
     ];
     const config = {
@@ -428,22 +428,22 @@ class Home extends React.Component {
                 <div style={{ background: '#ECECEC', padding: 5 }}>
 
                     <div style={{display: 'flex', marginBottom: 5}}>
-                        <Card title="用户日活" size="small" bordered={false} bodyStyle={{padding: 12}} style={{ marginRight: 5, width: '33.3%'}}>
-                            <DemoArea />
+                        <Card title="日活时间" size="small" bordered={false} bodyStyle={{padding: 12}} style={{ marginRight: 5, width: '33.3%'}}>
+                            <DemoLine />
                         </Card>
-                        <Card title="用户日活" size="small" bordered={false} bodyStyle={{padding: 12}} style={{ marginRight: 5, width: '33.3%' }}>
+                        <Card title="文章分类" size="small" bordered={false} bodyStyle={{padding: 12}} style={{ marginRight: 5, width: '33.3%' }}>
                             <DemoPie />
                         </Card>
-                        <Card title="用户日活" size="small" bordered={false} style={{ width: '33.3%' }}>
+                        <Card title="用户年龄" size="small" bordered={false} style={{ width: '33.3%' }}>
                             <DemoBar />
                         </Card>
                     </div>
 
                     <div style={{display: 'flex', marginBottom: 5}}>
-                        <Card size="small" title="用户日活" bordered={false} bodyStyle={{padding: 12}} style={{ marginRight: 5, width: '50%' }}  >
-                            <DemoLine />
+                        <Card size="small" title="用户分布" bordered={false} bodyStyle={{padding: 12}} style={{ marginRight: 5, width: '50%' }}  >
+                          <DemoArea />
                         </Card>
-                        <Card size="small" title="用户日活" bordered={false} bodyStyle={{padding: 12}} style={{ width: '50%' }}>
+                        <Card size="small" title="评论分布" bordered={false} bodyStyle={{padding: 12}} style={{ width: '50%' }}>
                             <DemoScatter />
                         </Card>
                     </div>

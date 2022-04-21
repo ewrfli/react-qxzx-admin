@@ -36,15 +36,15 @@ class comments extends React.Component {
           width: 80,
           align: 'center'
         },
-        {
-          title: '用户名',
-          width: 100,
-          key: 'user_name',
-          dataIndex: 'user_name',
-          render: name => (
-            <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
-          )
-        },
+        // {
+        //   title: '用户名',
+        //   width: 100,
+        //   key: 'user_name',
+        //   dataIndex: 'user_name',
+        //   render: name => (
+        //     <Tag color={color[Math.floor(Math.random()*color.length)]}>{ name }</Tag>
+        //   )
+        // },
         {
           title: '用户ID',
           dataIndex: 'user_id',
